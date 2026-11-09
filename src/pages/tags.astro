@@ -1,0 +1,60 @@
+---
+import Layout from '~/layouts/PageLayout.astro';
+import Headline from '~/components/blog/Headline.astro';
+import Breadcrumbs from '~/components/common/Breadcrumbs.astro';
+import { getPermalink, getBlogPermalink } from '~/utils/permalinks';
+import { fetchPosts } from '~/utils/blog';
+
+export const prerender = true;
+
+const posts = await fetchPosts();
+const tagMap = new Map<string, { title: string; slug: string; count: number }>();
+
+for (const post of posts) {
+  for (const tag of post.tags ?? []) {
+    const item = tagMap.get(tag.slug) ?? {
+      title: tag.title,
+      slug: tag.slug,
+      count: 0,
+    };
+    item.count += 1;
+    tagMap.set(tag.slug, item);
+  }
+}
+
+const tags = [...tagMap.values()].sort((a, b) => a.title.localeCompare(b.title));
+
+const metadata = {
+  title: 'Tags',
+  description: 'Browse all article tags.',
+};
+---
+
+<Layout metadata={metadata}>
+  <Breadcrumbs bar items={[
+    { text: 'Home', href: getPermalink('/') },
+    { text: 'Blog', href: getBlogPermalink() },
+    { text: 'Tags' },
+  ]} />
+  <section class="px-4 md:px-6 py-12 sm:py-16 lg:py-20 mx-auto max-w-4xl">
+    <Headline>All Tags</Headline>
+    <p class="text-muted dark:text-slate-400 mb-8">Browse articles by tag.</p>
+    {tags.length ? (
+      <ul class="flex flex-wrap gap-3">
+        {tags.map((tag) => (
+          <li>
+            <a
+              href={getPermalink(tag.slug, 'tag')}
+              class="inline-flex items-center gap-2 rounded-lg border border-gray-200 dark:border-slate-700 px-4 py-2 hover:border-primary hover:text-primary transition"
+            >
+              <span>{tag.title}</span>
+              <span class="text-sm text-muted dark:text-slate-400">{tag.count}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    ) : (
+      <p class="text-muted dark:text-slate-400">No tags found.</p>
+    )}
+  </section>
+</Layout>

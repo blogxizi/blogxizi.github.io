@@ -1,0 +1,71 @@
+---
+---
+
+<div class="giscus-container mt-12 mx-auto w-full max-w-3xl px-6 sm:px-6">
+</div>
+
+<script>
+  const initGiscus = () => {
+    const container = document.querySelector('.giscus-container');
+    if (!container || container.dataset.initialized === 'true') return;
+
+    container.dataset.initialized = 'true';
+    container.innerHTML = '';
+
+    const theme = document.documentElement.classList.contains('dark')
+      ? 'dark_high_contrast'
+      : 'light';
+
+    const script = document.createElement('script');
+    script.src = 'https://giscus.app/client.js';
+    script.async = true;
+    script.crossOrigin = 'anonymous';
+
+    const config = {
+      'data-repo': 'blogxizi/blog-comments',
+      'data-repo-id': 'R_kgDOVoBUIQ',
+      'data-category': 'Comments',
+      'data-category-id': 'DIC_kwDOVoBUIc4DKuHt',
+      'data-mapping': 'pathname',
+      'data-strict': '0',
+      'data-reactions-enabled': '1',
+      'data-emit-metadata': '0',
+      'data-input-position': 'top',
+      'data-theme': theme,
+      'data-lang': 'zh-CN',
+    };
+
+    Object.entries(config).forEach(([key, value]) => {
+      script.setAttribute(key, value);
+    });
+
+    container.appendChild(script);
+  };
+
+  const updateGiscusTheme = () => {
+    const theme = document.documentElement.classList.contains('dark')
+      ? 'dark_high_contrast'
+      : 'light';
+
+    document.querySelector<HTMLIFrameElement>('.giscus-frame')
+      ?.contentWindow?.postMessage(
+        { giscus: { setConfig: { theme } } },
+        'https://giscus.app'
+      );
+  };
+
+  document.addEventListener('astro:page-load', initGiscus);
+
+  if (document.readyState !== 'loading') {
+    initGiscus();
+  } else {
+    document.addEventListener('DOMContentLoaded', initGiscus, { once: true });
+  }
+
+  document.addEventListener('astro:page-load', updateGiscusTheme);
+
+  new MutationObserver(updateGiscusTheme).observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ['class'],
+  });
+</script>

@@ -1,0 +1,40 @@
+---
+import Layout from '~/layouts/PageLayout.astro';
+import BlogLatestPosts from '~/components/widgets/BlogLatestPosts.astro';
+
+const metadata = {
+  title: 'ホーム',
+  description: '思考を記録し、日々の暮らしを綴る。エッセイ、詩、評論、日常の記録。',
+};
+---
+
+<Layout metadata={metadata}>
+  <section class="mx-auto max-w-3xl px-4 py-16 sm:py-24">
+    <p class="mb-4 text-sm font-semibold uppercase tracking-widest text-primary">
+      パーソナルブログ
+    </p>
+    <h1 class="mb-6 text-4xl font-bold tracking-tight sm:text-6xl">
+      わたしについて来なさい。人間をとる漁師にしてあげよう。
+    </h1>
+    <p class="mb-8 max-w-2xl text-lg leading-relaxed text-muted">
+      愛への憧れ、知識への探求、そして人類の苦しみに対する抑えがたい共感。この三つの純粋で強烈な情熱が、わたしの人生を支配してきた。
+      ——バートランド・ラッセル『わたしが生きる理由』
+    </p>
+    <div class="flex flex-wrap gap-3">
+      <a href="/blog" class="rounded-lg bg-primary px-5 py-3 font-semibold text-white">
+        ブログを読む
+      </a>
+      <a href="/about" class="rounded-lg border border-gray-300 px-5 py-3 font-semibold">
+        プロフィール
+      </a>
+    </div>
+    <div class="mt-10 flex flex-wrap gap-5 text-sm">
+      <a href="/" class="text-muted hover:text-primary">English</a>
+      <a href="/zh" class="text-muted hover:text-primary">简体中文</a>
+      <a href="/ja" aria-current="page" class="font-semibold text-primary">日本語</a>
+    </div>
+  </section>
+  <section class="mx-auto max-w-5xl px-4 pb-16 sm:pb-24">
+    <BlogLatestPosts title="最新の記事" information="エッセイ、詩、考察、日々の記録。" count={6} />
+  </section>
+</Layout>

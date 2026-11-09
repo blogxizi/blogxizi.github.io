@@ -1,0 +1,893 @@
+---
+import PageLayout from '~/layouts/PageLayout.astro';
+
+const metadata = {
+  title: 'Donate',
+  description: 'Support Blogxizi with an ETH donation on Ethereum Mainnet.',
+};
+---
+
+<PageLayout metadata={metadata}>
+  <section class="mx-auto max-w-3xl px-4 py-16 sm:py-24">
+    <div class="mb-6 flex justify-end">
+      <div class="inline-flex rounded-lg border border-border p-1" aria-label="Language">
+        <button id="lang-zh" type="button" class="rounded-md px-3 py-2 text-sm font-medium" aria-pressed="false"
+          >中文</button
+        >
+        <button id="lang-en" type="button" class="rounded-md px-3 py-2 text-sm font-medium" aria-pressed="true"
+          >English</button
+        >
+      </div>
+    </div>
+    <p data-i18n="eyebrow" class="mb-4 text-sm font-semibold uppercase tracking-widest text-primary">
+      Support this blog
+    </p>
+
+    <h1 data-i18n="title" class="mb-6 text-4xl font-bold tracking-tight sm:text-5xl">Support Blogxizi</h1>
+
+    <p data-i18n="intro" class="mb-10 text-lg leading-relaxed text-muted">
+      If you find this blog useful, you can support its continued development with an ETH donation. Thank you for your
+      support!
+    </p>
+
+    <div class="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <div class="rounded-xl border border-border p-5">
+        <p data-i18n="incomingEth" class="mb-2 text-sm text-muted">Incoming ETH</p>
+        <p id="total-donated" class="text-3xl font-bold">— ETH</p>
+        <p class="mt-2 text-sm text-muted">
+          <span id="donation-count">—</span>
+          <span data-i18n="ethTransfers">ETH transfers</span>
+        </p>
+        <p data-i18n="configureStats" id="stats-note" class="mt-2 text-sm text-muted">
+          Configure a receiving address to load statistics.
+        </p>
+      </div>
+
+      <div class="rounded-xl border border-border p-5">
+        <p data-i18n="incomingUsdt" class="mb-2 text-sm text-muted">Incoming USDT</p>
+        <p id="total-usdt" class="text-3xl font-bold">— USDT</p>
+        <p class="mt-2 text-sm text-muted">
+          <span id="count-usdt">—</span>
+          <span data-i18n="usdtTransfers">USDT transfers</span>
+        </p>
+      </div>
+
+      <div class="rounded-xl border border-border p-5">
+        <p data-i18n="incomingUsdc" class="mb-2 text-sm text-muted">Incoming USDC</p>
+        <p id="total-usdc" class="text-3xl font-bold">— USDC</p>
+        <p class="mt-2 text-sm text-muted">
+          <span id="count-usdc">—</span>
+          <span data-i18n="usdcTransfers">USDC transfers</span>
+        </p>
+      </div>
+    </div>
+
+    <div class="rounded-2xl border border-border p-6 sm:p-8">
+      <div class="mb-6">
+        <h2 data-i18n="donateHeading" class="mb-2 text-2xl font-semibold">Donate with ETH</h2>
+        <p class="text-sm text-muted">
+          <span data-i18n="networkLabel">Network</span>: <span data-i18n="mainnet">Ethereum Mainnet</span>
+        </p>
+      </div>
+
+      <div class="mb-6">
+        <p data-i18n="receivingAddress" class="mb-2 block text-sm font-medium">Receiving address</p>
+        <div class="flex flex-col gap-4 rounded-xl border border-border p-4 sm:flex-row sm:items-center">
+          <div class="min-w-0 flex-1">
+            <div
+              class="flex flex-col gap-3 rounded-lg bg-gray-100 p-4 text-sm text-gray-800 dark:bg-gray-800 dark:text-gray-100 sm:flex-row sm:items-center"
+            >
+              <span id="donation-address" class="min-w-0 flex-1 break-all">Receiving address not configured</span>
+              <button
+                id="copy-donation-address"
+                type="button"
+                aria-label="Copy address"
+                title="Copy address"
+                class="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-border bg-white text-gray-700 transition hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-gray-900 dark:text-gray-100 dark:hover:bg-gray-700"
+                disabled
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <rect x="8" y="8" width="13" height="13" rx="2"></rect>
+                  <path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"></path>
+                </svg>
+              </button>
+            </div>
+            <p id="copy-address-status" class="mt-2 text-sm text-muted" role="status" aria-live="polite"></p>
+            <p class="mt-2 text-sm text-muted">Always verify the receiving address before confirming a transaction.</p>
+          </div>
+          <div class="flex shrink-0 flex-col items-center gap-2 self-center">
+            <img
+              src="/images/eth-donation-qr.png"
+              alt="ETH donation address QR code"
+              width="160"
+              height="160"
+              class="h-40 w-40 rounded-lg border border-border bg-white p-2"
+              loading="lazy"
+            />
+            <span class="text-xs text-muted">Scan to get address</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="mb-4">
+        <label data-i18n="amountLabel" for="donation-amount" class="mb-2 block text-sm font-medium">
+          Amount (ETH)
+        </label>
+        <input
+          id="donation-amount"
+          type="number"
+          min="0.000001"
+          step="any"
+          inputmode="decimal"
+          placeholder="0.01"
+          class="w-full rounded-lg border border-border bg-white px-4 py-3 text-base text-gray-900 dark:bg-gray-900 dark:text-gray-100"
+        />
+      </div>
+
+      <div class="mb-4 flex flex-col gap-3 sm:flex-row">
+        <button
+          id="connect-wallet"
+          type="button"
+          class="inline-flex flex-1 items-center justify-center rounded-lg border border-border px-5 py-3 font-medium transition hover:opacity-80"
+        >
+          <span data-i18n="connectWallet">Connect Wallet</span>
+        </button>
+        <button
+          id="donate-button"
+          type="button"
+          disabled
+          class="inline-flex flex-1 items-center justify-center rounded-lg bg-primary px-5 py-3 font-medium text-white opacity-50"
+        >
+          <span data-i18n="donateButton">Donate ETH</span>
+        </button>
+      </div>
+
+      <p data-i18n="walletStatus" id="wallet-status" role="status" aria-live="polite" class="mb-6 text-sm text-muted">
+        Connect a wallet to get started. Sending ETH remains disabled until a receiving address is configured.
+      </p>
+
+      <div class="border-t border-border pt-6">
+        <h3 data-i18n="recentTransfers" class="mb-3 text-lg font-semibold">Recent incoming transfers</h3>
+        <ul id="donation-transactions" class="space-y-3 text-sm">
+          <li data-i18n="statsPlaceholder" class="text-muted">Statistics will appear here after configuration.</li>
+        </ul>
+      </div>
+    </div>
+
+    <p data-i18n="disclaimer" class="mt-6 text-sm leading-relaxed text-muted">
+      Donations are voluntary. Transactions on Ethereum Mainnet require network fees and are generally irreversible.
+      Please verify the address, network, and amount in your wallet before confirming.
+    </p>
+  </section>
+</PageLayout>
+
+<script>
+  import {
+    createPublicClient,
+    createWalletClient,
+    custom,
+    formatEther,
+    getAddress,
+    isAddress,
+    parseEther,
+    type Address,
+  } from 'viem';
+  import { mainnet } from 'viem/chains';
+  import { http } from 'viem';
+  import { DONATION_ADDRESS } from '~/config/donation';
+
+  declare global {
+    interface Window {
+      ethereum?: Parameters<typeof custom>[0];
+    }
+  }
+
+  function initDonatePage() {
+    const langZhButtonForInit = document.querySelector<HTMLButtonElement>('#lang-zh');
+    const langEnButtonForInit = document.querySelector<HTMLButtonElement>('#lang-en');
+    if (!langZhButtonForInit || !langEnButtonForInit || langZhButtonForInit.dataset.initialized === 'true') return;
+    langZhButtonForInit.dataset.initialized = 'true';
+
+    const configuredAddress = DONATION_ADDRESS.trim();
+    const validAddress = isAddress(configuredAddress);
+    const receivingAddress = validAddress ? getAddress(configuredAddress) : '';
+
+    const addressElement = document.querySelector<HTMLElement>('#donation-address')!;
+    const copyAddressButton = document.querySelector<HTMLButtonElement>('#copy-donation-address')!;
+    const copyAddressStatus = document.querySelector<HTMLElement>('#copy-address-status')!;
+    const connectButton = document.querySelector<HTMLButtonElement>('#connect-wallet')!;
+    const donateButton = document.querySelector<HTMLButtonElement>('#donate-button')!;
+    const amountInput = document.querySelector<HTMLInputElement>('#donation-amount')!;
+    const statusElement = document.querySelector<HTMLElement>('#wallet-status')!;
+    const totalElement = document.querySelector<HTMLElement>('#total-donated')!;
+    const countElement = document.querySelector<HTMLElement>('#donation-count')!;
+    const usdtTotalElement = document.querySelector<HTMLElement>('#total-usdt')!;
+    const usdtCountElement = document.querySelector<HTMLElement>('#count-usdt')!;
+    const usdcTotalElement = document.querySelector<HTMLElement>('#total-usdc')!;
+    const usdcCountElement = document.querySelector<HTMLElement>('#count-usdc')!;
+    const statsNote = document.querySelector<HTMLElement>('#stats-note')!;
+    const transactionsElement = document.querySelector<HTMLElement>('#donation-transactions')!;
+
+    // Ethereum Mainnet ERC-20 tokens tracked by donation statistics.
+    const ERC20_TOKENS = [
+      {
+        symbol: 'USDT',
+        name: 'Tether USD',
+        address: '0xdAC17F958D2ee523a2206206994597C13D831ec7',
+        decimals: 6,
+      },
+      {
+        symbol: 'USDC',
+        name: 'USD Coin',
+        address: '0xA0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
+        decimals: 6,
+      },
+    ] as const;
+
+    const langZhButton = document.querySelector<HTMLButtonElement>('#lang-zh')!;
+    const langEnButton = document.querySelector<HTMLButtonElement>('#lang-en')!;
+    type Language = 'zh' | 'en';
+    let language: Language = navigator.language.toLowerCase().startsWith('zh') ? 'zh' : 'en';
+
+    function updateLanguageButtons() {
+      langZhButton.setAttribute('aria-pressed', String(language === 'zh'));
+      langEnButton.setAttribute('aria-pressed', String(language === 'en'));
+      langZhButton.classList.toggle('bg-primary', language === 'zh');
+      langZhButton.classList.toggle('text-white', language === 'zh');
+      langEnButton.classList.toggle('bg-primary', language === 'en');
+      langEnButton.classList.toggle('text-white', language === 'en');
+    }
+
+    const translations: Record<Language, Record<string, string>> = {
+      en: {
+        eyebrow: 'Support this blog',
+        title: 'Support Blogxizi',
+        intro:
+          'If you find this blog useful, you can support its continued development with an ETH donation. Thank you for your support!',
+        incomingEth: 'Incoming ETH',
+        ethTransfers: 'ETH transfers',
+        incomingUsdt: 'Incoming USDT',
+        usdtTransfers: 'USDT transfers',
+        incomingUsdc: 'Incoming USDC',
+        usdcTransfers: 'USDC transfers',
+        incomingTransactions: 'Incoming transactions',
+        successfulTransfers: 'Successful ETH transfers only',
+        configureStats: 'Configure a receiving address to load statistics.',
+        addressNotConfigured: 'Receiving address not configured',
+        walletStatus:
+          'Connect a wallet to get started. Sending ETH remains disabled until a receiving address is configured.',
+        statsPlaceholder: 'Statistics will appear here after configuration.',
+        donateHeading: 'Donate with ETH',
+        networkLabel: 'Network',
+        mainnet: 'Ethereum Mainnet',
+        receivingAddress: 'Receiving address',
+        copyAddress: 'Copy address',
+        addressCopied: 'Address copied.',
+        addressCopyFailed: 'Could not copy address. Please copy it manually.',
+        amountLabel: 'Amount (ETH)',
+        connectWallet: 'Connect Wallet',
+        donateButton: 'Donate ETH',
+        recentTransfers: 'Recent incoming transfers',
+        disclaimer:
+          'Donations are voluntary. Transactions on Ethereum Mainnet require network fees and are generally irreversible. Please verify the address, network, and amount in your wallet before confirming.',
+      },
+      zh: {
+        eyebrow: '支持这个博客',
+        title: '支持 Blogxizi',
+        intro: '如果你觉得这个博客对你有所帮助，欢迎通过 ETH 捐赠支持它持续发展。感谢你的支持！',
+        incomingEth: '收到的 ETH 总额',
+        ethTransfers: '笔 ETH 转账',
+        incomingUsdt: '收到的 USDT 总额',
+        usdtTransfers: '笔 USDT 转账',
+        incomingUsdc: '收到的 USDC 总额',
+        usdcTransfers: '笔 USDC 转账',
+        incomingTransactions: '收到的交易笔数',
+        successfulTransfers: '仅统计成功的 ETH 转账',
+        configureStats: '配置收款地址后即可加载统计信息。',
+        addressNotConfigured: '尚未配置收款地址',
+        walletStatus: '请先连接钱包。配置收款地址后才能发送 ETH。',
+        statsPlaceholder: '配置完成后，统计信息将在此处显示。',
+        donateHeading: '使用 ETH 捐赠',
+        networkLabel: '网络',
+        mainnet: '以太坊主网',
+        receivingAddress: '收款地址',
+        copyAddress: '复制地址',
+        addressCopied: '地址已复制。',
+        addressCopyFailed: '复制失败，请手动复制地址。',
+        amountLabel: '捐赠金额（ETH）',
+        connectWallet: '连接钱包',
+        donateButton: '捐赠 ETH',
+        recentTransfers: '最近收到的转账',
+        disclaimer:
+          '捐赠完全自愿。以太坊主网交易需要支付网络手续费，且通常无法撤销。确认前，请在钱包中仔细核对收款地址、网络和金额。',
+      },
+    };
+
+    let lastStatusMessage = '';
+
+    let lastStatisticsNote:
+      | { kind: 'reading' | 'allPagesChecked' | 'partialScan'; count?: number }
+      | { kind: 'couldNotLoad'; error: string }
+      | { kind: 'couldNotLoadLater' }
+      | null = null;
+
+    let lastStatisticsListState: 'loading' | 'transactions' | 'noIncoming' | 'error' | null = null;
+    let lastIncomingTransactions: Array<{
+      hash: string;
+      value: string;
+      timestamp: string;
+      symbol: string;
+      decimals: number;
+    }> = [];
+
+    function applyTranslations() {
+      document.querySelectorAll<HTMLElement>('[data-i18n]').forEach((element) => {
+        const key = element.dataset.i18n;
+        const translated = key ? translations[language][key] : undefined;
+        if (translated !== undefined) {
+          element.textContent = translated;
+        }
+      });
+
+      if (!validAddress) {
+        addressElement.textContent = language === 'zh' ? '尚未配置收款地址' : 'Receiving address not configured';
+        statsNote.textContent =
+          language === 'zh'
+            ? '请在 src/config/donation.ts 中配置你的公开 ETH 地址。'
+            : 'Add your public ETH address in src/config/donation.ts.';
+      }
+
+      if (lastStatusMessage) {
+        setStatus(lastStatusMessage);
+      }
+
+      refreshStatisticsLanguage();
+    }
+
+    function setLanguage(nextLanguage: Language) {
+      language = nextLanguage;
+      updateLanguageButtons();
+      document.documentElement.lang = language === 'zh' ? 'zh-CN' : 'en';
+      applyTranslations();
+      renderDonateButtonLabel();
+    }
+
+    langZhButton.addEventListener('click', () => setLanguage('zh'));
+    langEnButton.addEventListener('click', () => setLanguage('en'));
+
+    const publicClient = createPublicClient({
+      chain: mainnet,
+      transport: http(),
+    });
+
+    let walletClient: ReturnType<typeof createWalletClient> | undefined;
+    let connectedAccount: Address | undefined;
+    let busy = false;
+
+    const statusTranslations: Record<Language, Record<string, string>> = {
+      en: {
+        'No browser wallet detected. Install a compatible wallet such as MetaMask.':
+          'No browser wallet detected. Install a compatible wallet such as MetaMask.',
+        'No wallet account was selected.': 'No wallet account was selected.',
+        'Please switch your wallet to Ethereum Mainnet and try again.':
+          'Please switch your wallet to Ethereum Mainnet and try again.',
+        'Connect a wallet and configure a valid receiving address first.':
+          'Connect a wallet and configure a valid receiving address first.',
+        'Enter a valid ETH amount greater than zero.': 'Enter a valid ETH amount greater than zero.',
+        'Switch to Ethereum Mainnet before sending.': 'Switch to Ethereum Mainnet before sending.',
+        'Donation cancelled before sending.': 'Donation cancelled before sending.',
+      },
+      zh: {
+        'No browser wallet detected. Install a compatible wallet such as MetaMask.':
+          '未检测到浏览器钱包，请安装 MetaMask 等兼容钱包。',
+        'No wallet account was selected.': '未选择钱包账户。',
+        'Please switch your wallet to Ethereum Mainnet and try again.': '请将钱包切换到以太坊主网后重试。',
+        'Connect a wallet and configure a valid receiving address first.': '请先连接钱包并配置有效的收款地址。',
+        'Enter a valid ETH amount greater than zero.': '请输入大于零的有效 ETH 金额。',
+        'Switch to Ethereum Mainnet before sending.': '发送前请将钱包切换到以太坊主网。',
+        'Donation cancelled before sending.': '已取消捐赠，尚未发送交易。',
+      },
+    };
+
+    function setStatus(message: string) {
+      lastStatusMessage = message;
+
+      if (language === 'en') {
+        statusElement.textContent = message;
+        return;
+      }
+
+      const exact = statusTranslations.zh[message];
+      if (exact) {
+        statusElement.textContent = exact;
+        return;
+      }
+
+      const replacements: Array<[string, string]> = [
+        ['Wallet connected: ', '钱包已连接：'],
+        ['. Verify the network and amount before donating.', '。捐赠前请核对网络和金额。'],
+        ['Could not connect wallet: ', '钱包连接失败：'],
+        ['Donation confirmed. Transaction: ', '捐赠已确认。交易哈希：'],
+        ['The transaction failed. View details: ', '交易失败。查看详情：'],
+        ['Transaction submitted: ', '交易已提交：'],
+        ['. Waiting for confirmation…', '。等待确认…'],
+        ['. Confirmation lookup failed; check its status on ', '。查询确认状态失败，请查看：'],
+        ['Donation was not completed: ', '捐赠未完成：'],
+        [
+          'The receiving address has not been configured. Wallet connection can be tested, but sending ETH is disabled.',
+          '尚未配置收款地址。可以测试钱包连接，但暂时无法发送 ETH。',
+        ],
+      ];
+
+      let translated = message;
+      for (const [from, to] of replacements) {
+        translated = translated.replace(from, to);
+      }
+
+      statusElement.textContent = translated;
+    }
+
+    const donateButtonLabels: Record<Language, Record<string, string>> = {
+      en: {
+        ready: 'Donate ETH',
+        confirming: 'Confirm in wallet…',
+        waiting: 'Waiting for confirmation…',
+      },
+      zh: {
+        ready: '捐赠 ETH',
+        confirming: '请在钱包中确认…',
+        waiting: '等待交易确认…',
+      },
+    };
+
+    let donateButtonState: 'ready' | 'confirming' | 'waiting' = 'ready';
+
+    function renderDonateButtonLabel() {
+      const label = donateButtonLabels[language][donateButtonState];
+      const labelElement = donateButton.querySelector<HTMLElement>('[data-i18n="donateButton"]');
+
+      if (labelElement) {
+        labelElement.textContent = label;
+      } else {
+        donateButton.textContent = label;
+      }
+    }
+
+    function updateDonateButton() {
+      donateButton.disabled = !validAddress || !connectedAccount || busy;
+      donateButton.classList.toggle('opacity-50', donateButton.disabled);
+    }
+
+    setLanguage(language);
+
+    copyAddressButton.addEventListener('click', async () => {
+      if (!validAddress) return;
+
+      try {
+        await navigator.clipboard.writeText(receivingAddress);
+        copyAddressStatus.textContent = language === 'zh' ? '地址已复制。' : 'Address copied.';
+      } catch {
+        copyAddressStatus.textContent =
+          language === 'zh' ? '复制失败，请手动复制地址。' : 'Could not copy address. Please copy it manually.';
+      }
+    });
+
+    if (validAddress) {
+      addressElement.textContent = receivingAddress;
+      copyAddressButton.disabled = false;
+    } else {
+      addressElement.textContent = 'Receiving address not configured';
+      statsNote.textContent = 'Add your public ETH address in src/config/donation.ts.';
+      setStatus(
+        'The receiving address has not been configured. Wallet connection can be tested, but sending ETH is disabled.'
+      );
+    }
+
+    connectButton.addEventListener('click', async () => {
+      if (!window.ethereum) {
+        setStatus('No browser wallet detected. Install a compatible wallet such as MetaMask.');
+        return;
+      }
+
+      try {
+        connectButton.disabled = true;
+        walletClient = createWalletClient({
+          chain: mainnet,
+          transport: custom(window.ethereum),
+        });
+
+        const chainId = await walletClient.getChainId();
+        if (chainId !== mainnet.id) {
+          try {
+            await walletClient.switchChain({ id: mainnet.id });
+          } catch {
+            setStatus('Please switch your wallet to Ethereum Mainnet and try again.');
+            return;
+          }
+        }
+
+        const accounts = await walletClient.requestAddresses();
+        if (!accounts.length) {
+          setStatus('No wallet account was selected.');
+          return;
+        }
+
+        connectedAccount = accounts[0];
+        const shortAccount = `${connectedAccount.slice(0, 6)}…${connectedAccount.slice(-4)}`;
+
+        connectButton.textContent = shortAccount;
+        setStatus(`Wallet connected: ${shortAccount}. Verify the network and amount before donating.`);
+        updateDonateButton();
+      } catch (error) {
+        const message = error instanceof Error ? error.message : 'Unknown wallet error';
+        setStatus(`Could not connect wallet: ${message}`);
+      } finally {
+        connectButton.disabled = false;
+      }
+    });
+
+    donateButton.addEventListener('click', async () => {
+      if (!walletClient || !connectedAccount || !validAddress || busy) {
+        setStatus('Connect a wallet and configure a valid receiving address first.');
+        return;
+      }
+
+      const amount = amountInput.value.trim();
+      if (!amount || !Number.isFinite(Number(amount)) || Number(amount) <= 0) {
+        setStatus('Enter a valid ETH amount greater than zero.');
+        return;
+      }
+
+      try {
+        const currentChainId = await walletClient.getChainId();
+        if (currentChainId !== mainnet.id) {
+          setStatus('Switch to Ethereum Mainnet before sending.');
+          return;
+        }
+
+        const value = parseEther(amount);
+        if (value <= 0n) {
+          setStatus('Enter an ETH amount greater than zero.');
+          return;
+        }
+
+        const confirmed = window.confirm(
+          `Send ${amount} ETH to ${receivingAddress} on Ethereum Mainnet? Verify this address in your wallet before confirming.`
+        );
+        if (!confirmed) {
+          setStatus('Donation cancelled before sending.');
+          return;
+        }
+
+        busy = true;
+        updateDonateButton();
+        donateButtonState = 'confirming';
+        renderDonateButtonLabel();
+
+        const hash = await walletClient.sendTransaction({
+          account: connectedAccount,
+          chain: mainnet,
+          to: receivingAddress as Address,
+          value,
+        });
+
+        setStatus(`Transaction submitted: ${hash}. Waiting for confirmation…`);
+        donateButtonState = 'waiting';
+        renderDonateButtonLabel();
+
+        try {
+          const receipt = await publicClient.waitForTransactionReceipt({ hash });
+          if (receipt.status === 'success') {
+            setStatus(`Donation confirmed. Transaction: ${hash}`);
+            await loadStatistics();
+          } else {
+            setStatus(`The transaction failed. View details: https://eth.blockscout.com/tx/${hash}`);
+          }
+        } catch {
+          setStatus(
+            `Transaction submitted: ${hash}. Confirmation lookup failed; check its status on https://eth.blockscout.com/tx/${hash}`
+          );
+        }
+      } catch (error) {
+        const message = error instanceof Error ? error.message : 'Unknown transaction error';
+        setStatus(`Donation was not completed: ${message}`);
+      } finally {
+        busy = false;
+        donateButtonState = 'ready';
+        renderDonateButtonLabel();
+        updateDonateButton();
+      }
+    });
+
+    const statisticsTranslations: Record<Language, Record<string, string>> = {
+      en: {
+        loading: 'Loading…',
+        reading: 'Reading recent confirmed transactions from Blockscout.',
+        allPagesChecked: 'All transaction pages returned by Blockscout were checked.',
+        partialScan: 'Partial scan: latest {count} transactions checked. Older history may be missing.',
+        noIncoming: 'No successful incoming ETH, USDT, or USDC transfers were found in the scanned history.',
+        unavailable: 'Unavailable',
+        couldNotLoad: 'Could not load statistics.',
+        couldNotLoadLater: 'Could not load statistics. Please try again later.',
+        transactionsNotLoaded: 'Statistics could not be loaded. This does not mean there were zero donations.',
+      },
+      zh: {
+        loading: '加载中…',
+        reading: '正在从 Blockscout 读取最近已确认的交易。',
+        allPagesChecked: '已检查 Blockscout 返回的所有交易页面。',
+        partialScan: '已进行部分扫描：检查了最近 {count} 笔交易，可能遗漏更早的记录。',
+        noIncoming: '在已扫描的历史记录中没有找到成功转入的 ETH、USDT 或 USDC。',
+        unavailable: '暂不可用',
+        couldNotLoad: '无法加载统计信息。',
+        couldNotLoadLater: '无法加载统计信息，请稍后重试。',
+        transactionsNotLoaded: '无法加载统计信息。这并不代表捐赠数量为零。',
+      },
+    };
+
+    function statisticsText(key: string): string {
+      return statisticsTranslations[language][key] ?? key;
+    }
+
+    function refreshStatisticsLanguage() {
+      if (!validAddress) return;
+
+      if (lastStatisticsNote) {
+        const note = lastStatisticsNote;
+
+        if (note.kind === 'partialScan') {
+          statsNote.textContent = statisticsText('partialScan').replace('{count}', String(note.count ?? 0));
+        } else if (note.kind === 'couldNotLoad') {
+          statsNote.textContent = `${statisticsText('couldNotLoad')} ${note.error}`;
+        } else {
+          statsNote.textContent = statisticsText(note.kind);
+        }
+      }
+
+      if (lastStatisticsListState === 'transactions') {
+        renderIncomingTransactions();
+      } else if (lastStatisticsListState === 'noIncoming') {
+        const item = document.createElement('li');
+        item.className = 'text-muted';
+        item.textContent = statisticsText('noIncoming');
+        transactionsElement.replaceChildren(item);
+      } else if (lastStatisticsListState === 'error') {
+        const item = document.createElement('li');
+        item.className = 'text-muted';
+        item.textContent = statisticsText('transactionsNotLoaded');
+        transactionsElement.replaceChildren(item);
+      }
+    }
+
+    function renderIncomingTransactions() {
+      transactionsElement.replaceChildren();
+
+      for (const tx of lastIncomingTransactions.slice(0, 10)) {
+        const item = document.createElement('li');
+        item.className = 'flex flex-wrap items-center justify-between gap-2 border-b border-border pb-3';
+
+        const link = document.createElement('a');
+        link.href = `https://eth.blockscout.com/tx/${encodeURIComponent(tx.hash)}`;
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+        link.className = 'underline underline-offset-4';
+        link.textContent = `${tx.hash.slice(0, 10)}…${tx.hash.slice(-6)}`;
+
+        const detail = document.createElement('span');
+        const date = tx.timestamp ? new Date(tx.timestamp).toLocaleDateString() : '';
+        const amount = Number(BigInt(tx.value)) / 10 ** tx.decimals;
+        const formattedAmount = amount.toLocaleString(undefined, {
+          maximumFractionDigits: tx.decimals,
+        });
+        detail.textContent = `${formattedAmount} ${tx.symbol}${date ? ` · ${date}` : ''}`;
+
+        item.append(link, detail);
+        transactionsElement.append(item);
+      }
+    }
+
+    async function loadStatistics() {
+      if (!validAddress) return;
+
+      totalElement.textContent = statisticsText('loading');
+      countElement.textContent = '…';
+      usdtTotalElement.textContent = statisticsText('loading');
+      usdtCountElement.textContent = '…';
+      usdcTotalElement.textContent = statisticsText('loading');
+      usdcCountElement.textContent = '…';
+      statsNote.textContent = statisticsText('reading');
+      lastStatisticsNote = { kind: 'reading' };
+      lastStatisticsListState = 'loading';
+      lastIncomingTransactions = [];
+      transactionsElement.replaceChildren();
+
+      const incoming: Array<{
+        hash: string;
+        value: string;
+        timestamp: string;
+        symbol: string;
+        decimals: number;
+      }> = [];
+
+      async function scanPages(
+        endpoint: string,
+        extraParams: Record<string, string> = {},
+        onItems: (
+          items: Array<{
+            hash?: string;
+            value?: string;
+            status?: string;
+            result?: string;
+            timestamp?: string;
+            to?: { hash?: string; address?: string };
+            transaction_hash?: string;
+            tx_hash?: string;
+            total?: { value?: string; decimals?: string };
+            token?: { address_hash?: string; address?: string; hash?: string; decimals?: string };
+          }>
+        ) => void
+      ) {
+        let nextParams: Record<string, string | number> | null = null;
+        let pages = 0;
+
+        while (pages < 20) {
+          const url = new URL(endpoint, 'https://eth.blockscout.com');
+          for (const [key, value] of Object.entries(extraParams)) {
+            url.searchParams.set(key, value);
+          }
+          if (nextParams) {
+            for (const [key, value] of Object.entries(nextParams)) {
+              url.searchParams.set(key, String(value));
+            }
+          }
+
+          const response = await fetch(url);
+          if (!response.ok) {
+            throw new Error(`Blockscout returned HTTP ${response.status}`);
+          }
+
+          const data = await response.json();
+          onItems(Array.isArray(data.items) ? data.items : []);
+          pages += 1;
+          nextParams =
+            data.next_page_params && typeof data.next_page_params === 'object' ? data.next_page_params : null;
+          if (!nextParams) break;
+        }
+
+        return { pages, hasMore: nextParams !== null };
+      }
+
+      let ethFailed = false;
+      try {
+        let totalWei = 0n;
+        let count = 0;
+        const result = await scanPages(`/api/v2/addresses/${receivingAddress}/transactions`, {}, (items) => {
+          for (const tx of items) {
+            const recipient = tx.to?.hash?.toLowerCase();
+            const value = BigInt(tx.value || '0');
+            if (
+              tx.status === 'ok' &&
+              tx.result === 'success' &&
+              recipient === receivingAddress.toLowerCase() &&
+              value > 0n
+            ) {
+              totalWei += value;
+              count += 1;
+              incoming.push({
+                hash: String(tx.hash),
+                value: value.toString(),
+                timestamp: String(tx.timestamp || ''),
+                symbol: 'ETH',
+                decimals: 18,
+              });
+            }
+          }
+        });
+
+        totalElement.textContent = `${Number(formatEther(totalWei)).toLocaleString(undefined, {
+          maximumFractionDigits: 6,
+        })} ETH`;
+        countElement.textContent = String(count);
+        lastStatisticsNote = result.hasMore
+          ? { kind: 'partialScan', count: result.pages * 50 }
+          : { kind: 'allPagesChecked' };
+        statsNote.textContent = result.hasMore
+          ? statisticsText('partialScan').replace('{count}', String(result.pages * 50))
+          : statisticsText('allPagesChecked');
+      } catch (error) {
+        ethFailed = true;
+        totalElement.textContent = statisticsText('unavailable');
+        countElement.textContent = '—';
+        if (error instanceof Error) {
+          lastStatisticsNote = { kind: 'couldNotLoad', error: error.message };
+          statsNote.textContent = `${statisticsText('couldNotLoad')} ${error.message}`;
+        } else {
+          lastStatisticsNote = { kind: 'couldNotLoadLater' };
+          statsNote.textContent = statisticsText('couldNotLoadLater');
+        }
+      }
+
+      for (const token of ERC20_TOKENS) {
+        const totalElementForToken = token.symbol === 'USDT' ? usdtTotalElement : usdcTotalElement;
+        const countElementForToken = token.symbol === 'USDT' ? usdtCountElement : usdcCountElement;
+
+        try {
+          let rawTotal = 0n;
+          let count = 0;
+
+          await scanPages(
+            `/api/v2/addresses/${receivingAddress}/token-transfers`,
+            { type: 'ERC-20', token: token.address },
+            (items) => {
+              for (const transfer of items) {
+                const recipient = (transfer.to?.hash ?? transfer.to?.address ?? '').toLowerCase();
+                const contract = (transfer.token?.address_hash ?? transfer.token?.address ?? transfer.token?.hash ?? '').toLowerCase();
+                const valueText = transfer.total?.value ?? transfer.value ?? '0';
+                const value = BigInt(String(valueText));
+
+                if (
+                  recipient === receivingAddress.toLowerCase() &&
+                  contract === token.address.toLowerCase() &&
+                  value > 0n
+                ) {
+                  rawTotal += value;
+                  count += 1;
+                  incoming.push({
+                    hash: String(transfer.transaction_hash ?? transfer.tx_hash ?? ''),
+                    value: value.toString(),
+                    timestamp: String(transfer.timestamp || ''),
+                    symbol: token.symbol,
+                    decimals: token.decimals,
+                  });
+                }
+              }
+            }
+          );
+
+          totalElementForToken.textContent = `${(Number(rawTotal) / 10 ** token.decimals).toLocaleString(undefined, {
+            maximumFractionDigits: token.decimals,
+          })} ${token.symbol}`;
+          countElementForToken.textContent = String(count);
+        } catch {
+          totalElementForToken.textContent = statisticsText('unavailable');
+          countElementForToken.textContent = '—';
+        }
+      }
+
+      incoming.sort((a, b) => {
+        const timeA = Date.parse(a.timestamp) || 0;
+        const timeB = Date.parse(b.timestamp) || 0;
+        return timeB - timeA;
+      });
+
+      lastIncomingTransactions = incoming;
+      lastStatisticsListState = incoming.length ? 'transactions' : ethFailed ? 'error' : 'noIncoming';
+
+      renderIncomingTransactions();
+
+      if (!incoming.length) {
+        const item = document.createElement('li');
+        item.className = 'text-muted';
+        item.textContent = statisticsText(lastStatisticsListState === 'error' ? 'transactionsNotLoaded' : 'noIncoming');
+        transactionsElement.append(item);
+      }
+    }
+    updateDonateButton();
+    if (validAddress) {
+      void loadStatistics();
+    }
+  }
+
+  document.addEventListener('astro:page-load', initDonatePage);
+  initDonatePage();
+</script>

@@ -1,0 +1,51 @@
+---
+import PageLayout from '~/layouts/PageLayout.astro';
+
+const metadata = {
+  title: 'Search',
+  description: 'Search articles on this site',
+};
+---
+
+<PageLayout metadata={metadata} language="zh">
+  <section class="mx-auto max-w-3xl px-4 py-12">
+    <h1 class="mb-6 text-3xl font-bold">Search</h1>
+    <p class="mb-6 text-muted">Enter keywords to search articles on this site.</p>
+    <div id="search" class="pagefind-search"></div>
+  </section>
+
+  <link slot="head" rel="stylesheet" href="/pagefind/pagefind-ui.css" />
+
+  <script>
+    import { PagefindUI } from '@pagefind/default-ui';
+
+    function initPagefind() {
+      const element = document.querySelector<HTMLElement>('#search');
+
+      if (!element || element.dataset.pagefindInitialized === 'true') {
+        return;
+      }
+
+      element.dataset.pagefindInitialized = 'true';
+
+      new PagefindUI({
+        element: '#search',
+        showSubResults: false,
+        showImages: false,
+        translations: {
+          placeholder: 'Search…',
+          clear_search: 'Clear',
+          load_more: 'Load more results',
+          search_label: 'Search this site',
+          filters_label: 'Filters',
+          zero_results: 'No results found',
+          many_results: '[count] results found',
+          one_result: '1 result found',
+        },
+      });
+    }
+
+    document.addEventListener('astro:page-load', initPagefind);
+    initPagefind();
+  </script>
+</PageLayout>

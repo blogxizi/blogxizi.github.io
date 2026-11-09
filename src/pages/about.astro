@@ -1,0 +1,64 @@
+---
+import Layout from '~/layouts/PageLayout.astro';
+
+const metadata = {
+  title: '关于',
+  description: '关于 Blogxizi，一个记录随笔、诗歌、观点与日常生活的个人博客。',
+};
+---
+
+<Layout metadata={metadata}>
+  <section class="mx-auto max-w-3xl px-4 py-16 sm:py-24">
+    <p class="mb-4 text-sm font-semibold uppercase tracking-widest text-primary">
+      About
+    </p>
+
+    <h1 class="mb-6 text-4xl font-bold tracking-tight sm:text-5xl">
+      关于 Blogxizi
+    </h1>
+
+    <p class="mb-6 text-lg leading-relaxed text-muted">
+      欢迎来到 Blogxizi。
+    </p>
+
+    <p class="mb-6 text-lg leading-relaxed">
+      这里是一个属于个人的文字空间，用来记录思考、表达观点，
+      也收藏生活中那些值得记住的瞬间。
+    </p>
+
+    <h2 class="mb-4 text-2xl font-semibold">这里写些什么</h2>
+
+    <ul class="mb-8 list-disc space-y-3 pl-6 text-lg">
+      <li>
+        <strong>随笔：</strong>
+        关于生活、成长、阅读与个人感受的记录。
+      </li>
+      <li>
+        <strong>诗歌：</strong>
+        用文字记录情绪、想象与那些难以言说的瞬间。
+      </li>
+      <li>
+        <strong>议论文：</strong>
+        对社会现象、公共话题和日常问题的观察与思考。
+      </li>
+      <li>
+        <strong>日常分享：</strong>
+        生活片段、旅行见闻、个人经历以及有趣的发现。
+      </li>
+    </ul>
+
+    <p class="mb-8 leading-relaxed text-muted">
+      不刻意追求固定的主题，也不限定表达的形式。
+      希望这里既能容纳认真的思考，也能留下平凡生活的痕迹。
+    </p>
+
+    <a
+      href="https://github.com/blogxizi"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="inline-flex h-12 items-center justify-center rounded-lg bg-primary px-5 font-medium text-white transition hover:opacity-90"
+    >
+      GitHub
+    </a>
+  </section>
+</Layout>
