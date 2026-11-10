@@ -51,11 +51,14 @@ const postCollection = defineCollection({
   loader: glob({ pattern: ['*.md', '*.mdx'], base: 'src/data/post' }),
   schema: z.object({
     publishDate: z.date().optional(),
+    published: z.date().optional(),
     updateDate: z.date().optional(),
     draft: z.boolean().optional(),
+    pinned: z.boolean().optional(),
 
     title: z.string(),
     excerpt: z.string().optional(),
+    description: z.string().optional(),
     image: z.string().optional(),
     /** Alternative text for the cover image. Leave empty for decorative stock photos. */
     imageAlt: z.string().optional(),

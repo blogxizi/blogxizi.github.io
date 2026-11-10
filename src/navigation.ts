@@ -6,6 +6,7 @@ export const headerData = {
     { text: '文章', href: getBlogPermalink() },
     { text: '搜索', href: getPermalink('/search') },
     { text: '关于', href: getPermalink('/about') },
+    { text: '标签', href: getPermalink('/tags') },
     {
       text: '语言',
       links: [
@@ -38,6 +39,7 @@ export const footerData = {
         { text: '全部文章', href: getBlogPermalink() },
         { text: '搜索', href: getPermalink('/search') },
         { text: '关于', href: getPermalink('/about') },
+        { text: '全部标签', href: getPermalink('/tags') },
       ],
     },
     {

@@ -29,15 +29,44 @@ export const findImage = async (
   imagePath?: string | ImageMetadata | null
 ): Promise<string | ImageMetadata | undefined | null> => {
   if (typeof imagePath !== 'string') return imagePath;
-  if (imagePath.startsWith('http://') || imagePath.startsWith('https://') || imagePath.startsWith('/'))
-    return imagePath;
-  if (!imagePath.startsWith('~/assets/images')) return imagePath;
+
+  if (
+    imagePath.startsWith('http://') ||
+    imagePath.startsWith('https://') ||
+    imagePath.startsWith('/')
+  ) return imagePath;
 
   const images = loadLocalImages();
-  const key = imagePath.replace('~/', '/src/');
-  const loader = images[key];
 
-  if (typeof loader !== 'function') return null;
+  const normalized = imagePath.replace(/^\.\//, '');
+
+  let key: string | undefined;
+
+  if (normalized.startsWith('~/assets/images/')) {
+    key = normalized.replace('~/', '/src/');
+  } else if (normalized.startsWith('src/assets/images/')) {
+    key = '/' + normalized;
+  } else if (normalized.startsWith('assets/images/')) {
+    key = '/src/' + normalized;
+  } else {
+    const matches = Object.keys(images).filter(
+      (path) => path.endsWith('/' + normalized)
+    );
+
+    if (matches.length === 1) key = matches[0];
+    else if (matches.length > 1) {
+      console.warn(`图片文件名不唯一：${imagePath}`);
+      return null;
+    }
+  }
+
+  const loader = key ? images[key] : undefined;
+
+  if (typeof loader !== 'function') {
+    console.warn(`找不到文章图片：${imagePath}`);
+    return null;
+  }
+
   return ((await loader()) as { default: ImageMetadata }).default;
 };
 

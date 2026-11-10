@@ -27,6 +27,8 @@ export interface Post {
   metadata?: MetaData;
 
   draft?: boolean;
+  /** Whether this post is pinned. */
+  pinned?: boolean;
 
   /** Rendered Astro component factory for the post body. */
   Content?: AstroComponentFactory;

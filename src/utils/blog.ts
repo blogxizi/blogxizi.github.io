@@ -45,10 +45,11 @@ const getNormalizedPost = async (post: CollectionEntry<'post'>): Promise<Post> =
   const { Content, remarkPluginFrontmatter } = await render(post);
 
   const {
-    publishDate: rawPublishDate = new Date(),
+    publishDate: rawPublishDate,
     updateDate: rawUpdateDate,
     title,
-    excerpt,
+    excerpt: rawExcerpt,
+    description,
     image,
     imageAlt,
     tags: rawTags = [],
@@ -58,8 +59,11 @@ const getNormalizedPost = async (post: CollectionEntry<'post'>): Promise<Post> =
     metadata = {},
   } = data;
 
+  const effectivePublishDate = rawPublishDate ?? data.published ?? new Date();
+  const excerpt = rawExcerpt ?? description;
+
   const slug = cleanSlug(id);
-  const publishDate = new Date(rawPublishDate);
+  const publishDate = new Date(effectivePublishDate);
   const updateDate = rawUpdateDate ? new Date(rawUpdateDate) : undefined;
 
   const category = rawCategory
@@ -92,6 +96,7 @@ const getNormalizedPost = async (post: CollectionEntry<'post'>): Promise<Post> =
     author: author,
 
     draft: draft,
+    pinned: data.pinned ?? false,
 
     metadata,
 
@@ -107,7 +112,10 @@ const load = async function (): Promise<Array<Post>> {
   const normalizedPosts = posts.map(async (post) => await getNormalizedPost(post));
 
   const results = (await Promise.all(normalizedPosts))
-    .sort((a, b) => b.publishDate.valueOf() - a.publishDate.valueOf())
+    .sort((a, b) => {
+      const pinnedOrder = Number(Boolean(b.pinned)) - Number(Boolean(a.pinned));
+      return pinnedOrder || b.publishDate.valueOf() - a.publishDate.valueOf();
+    })
     .filter((post) => !post.draft);
 
   return results;
