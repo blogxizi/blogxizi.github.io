@@ -1,6 +1,6 @@
 site:
   name: Blogxizi
-  site: 'https://blogxizi.github.io'
+  site: 'https://blogxizi.site'
   base: '/'
   trailingSlash: false
 
